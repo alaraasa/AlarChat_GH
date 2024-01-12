@@ -20,4 +20,4 @@ io.on('connection', (socket) => {
 
 app.use(express.static('public'));
 
-server.listen(11223, () => console.log('App is running on port 8080'));
+server.listen(80, () => console.log('App is running on port 8080'));
