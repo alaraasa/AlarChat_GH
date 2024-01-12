@@ -1,20 +1,40 @@
-// Server-side code
-const httpServer = require("http").createServer();
-const io = require("socket.io")(httpServer, { cors: { origin: "http://localhost:8080" } });
+// Importing necessary modules
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 
-io.on("connection", (socket) => {
-    console.log("A user has connected.");
+// Initializing express app
+const app = express();
 
-    socket.on("message", (message) => {
-        console.log(`New message: ${message}`);
-        io.emit("message", message);
+// Creating a server
+const server = http.createServer(app);
+
+// Setting up socket.io
+const io = socketIo(server);
+
+// Serve static files from public folder
+app.use(express.static('public'));
+
+// Socket connection event
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    // Message event
+    socket.on('message', (message) => {
+        console.log('Received message:', message);
+
+        // Emit the message to all clients
+        io.emit('message', message);
     });
 
-    socket.on("disconnect", () => {
-        console.log("A user has disconnected.");
+    // Disconnect event
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
     });
 });
 
-httpServer.listen(3000, () => {
-    console.log("Server is listening on port 3000.");
+// Start the server
+const port = 3000;
+server.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
 });

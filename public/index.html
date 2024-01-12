@@ -1,36 +1,17 @@
-<!-- Client-side code -->
-<template>
-    <div>
-        <h1>AlarChat</h1>
-        <div>
-            <div v-for="message in messages" :key="message">{{ message }}</div>
-        </div>
-        <input type="text" v-model="newMessage" @keyup.enter="sendMessage" />
-    </div>
-</template>
-
-<script>
-    import io from "socket.io-client";
-
-    export default {
-        data() {
-            return {
-                messages: [],
-                newMessage: "",
-            };
-        },
-        mounted() {
-            const socket = io("http://localhost:3000");
-            socket.on("message", (message) => {
-                this.messages.push(message);
-            });
-        },
-        methods: {
-            sendMessage() {
-                const socket = io("http://localhost:3000");
-                socket.emit("message", this.newMessage);
-                this.newMessage = "";
-            },
-        },
-    };
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Chat App</title>
+</head>
+<body>
+<ul id="messages">
+</ul>
+<form id="form" action="">
+    <input id="input" autocomplete="off" /><button>Send</button>
+</form>
+<script src="index.js"></script>
+</body>
+</html>
