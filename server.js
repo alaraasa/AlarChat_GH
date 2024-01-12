@@ -1,23 +1,20 @@
-const express = require("express");
-const socketIO = require('socket.io');
-const http = require('http');
+// Server-side code
+const httpServer = require("http").createServer();
+const io = require("socket.io")(httpServer, { cors: { origin: "http://localhost:8080" } });
 
-const app = express();
-const server = http.createServer(app);
-const io = socketIO(server);
+io.on("connection", (socket) => {
+    console.log("A user has connected.");
 
-io.on('connection', (socket) => {
-    console.log('New user joined');
-
-    socket.on('createMessage', (message) => {
-        io.emit('newMessage', message);
+    socket.on("message", (message) => {
+        console.log(`New message: ${message}`);
+        io.emit("message", message);
     });
 
-    socket.on('disconnect', () => {
-        console.log('User disconnected');
+    socket.on("disconnect", () => {
+        console.log("A user has disconnected.");
     });
 });
 
-app.use(express.static('public'));
-
-server.listen(80, () => console.log('App is running on port 8080'));
+httpServer.listen(3000, () => {
+    console.log("Server is listening on port 3000.");
+});
